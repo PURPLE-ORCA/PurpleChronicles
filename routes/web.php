@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
-Route::get('/dashboard', [CommentController::class, 'index'])->middleware(['auth'])->name('dashboard');
+// Route::get('/dashboard', [CommentController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 // Author routes
 Route::middleware(['auth', 'can:author'])->group(function () {

@@ -19,14 +19,19 @@ class PostController extends Controller
 {
     public function index()
     {
-    
-        $allPosts = Post::with(['user', 'category'])
+        $posts = Post::with(['user', 'category'])
+            ->where('status', 'published')
             ->latest()
-            ->take(8)
+            ->paginate(6); // Assuming you want pagination
+    
+        $featuredPosts = Post::with(['user', 'category'])
+            ->where('status', 'published')
+            ->orderBy('views', 'desc')
+            ->take(16)
             ->get();
     
         $comments = Comment::with(['user', 'post'])
-            ->where('status', 'pending')
+            ->where('status', 'approved')
             ->latest()
             ->take(9)
             ->get()
@@ -35,14 +40,18 @@ class PostController extends Controller
                 return $comment;
             });
     
-        $teamMembers = User::whereIn('role', ['admin', 'author'])
-            ->orderBy('created_at', 'desc')
+        $authors = User::where('role', 'author')
+            ->withCount('posts')
             ->get();
     
-        return Inertia::render('Dashboard', [
-            'toComments' => $comments,
-            'allPosts' => $allPosts,
-            'teamMembers' => $teamMembers
+        $categories = Category::all();
+    
+        return Inertia::render('Welcome', [
+            'posts' => $posts,
+            'featuredPosts' => $featuredPosts,
+            'comments' => $comments,
+            'authors' => $authors,
+            'categories' => $categories
         ]);
     }
     
