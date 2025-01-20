@@ -4,23 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
     public function index()
     {
+
         $tags = Tag::withCount('posts')->get();
         return view('admin.tags.index', compact('tags'));
     }
 
     public function create()
     {
+        Gate::authorize('admin');
+
         return view('admin.tags.create');
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('admin');
+
         $validated = $request->validate([
             'name' => 'required|max:255|unique:tags'
         ]);
@@ -47,11 +53,15 @@ class TagController extends Controller
 
     public function edit(Tag $tag)
     {
+        Gate::authorize('admin');
+
         return view('admin.tags.edit', compact('tag'));
     }
 
     public function update(Request $request, Tag $tag)
     {
+        Gate::authorize('admin');
+
         $validated = $request->validate([
             'name' => 'required|max:255|unique:tags,name,' . $tag->id
         ]);
@@ -67,6 +77,8 @@ class TagController extends Controller
 
     public function destroy(Tag $tag)
     {
+        Gate::authorize('admin');
+
         $tag->posts()->detach(); // Remove tag associations but keep posts
         $tag->delete();
         

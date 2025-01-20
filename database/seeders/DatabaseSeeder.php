@@ -37,8 +37,32 @@ class UserSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
+                'name' => 'Admin User2',
+                'email' => 'admin2@example.com',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
                 'name' => 'Author User',
                 'email' => 'author@example.com',
+                'password' => bcrypt('password'),
+                'role' => 'author',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => 'Author User2',
+                'email' => 'author2@example.com',
+                'password' => bcrypt('password'),
+                'role' => 'author',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => 'Author User3',
+                'email' => 'author3@example.com',
                 'password' => bcrypt('password'),
                 'role' => 'author',
                 'created_at' => Carbon::now(),
@@ -85,7 +109,7 @@ class PostSeeder extends Seeder
                 'title' => 'The Future of Artificial Intelligence',
                 'slug' => 'the-future-of-artificial-intelligence',
                 'content' => 'Artificial intelligence is rapidly transforming various industries and aspects of our lives. From machine learning algorithms to sophisticated neural networks, AI is becoming an integral part of our world. This article explores the potential of AI in the future, including its impact on jobs, healthcare, and daily life.',
-                 'featured_image' => 'storage/posts/feat.png',
+                'featured_image' => 'storage/posts/feat.png',
                 'category_id' => 1,
                 'status' => 'published',
                 'views' => 250,
@@ -233,7 +257,7 @@ class PostTagSeeder extends Seeder
             $selectedTags = array_rand(array_flip($tags), $numTags);
 
              foreach ((array) $selectedTags as $tag) {
-                DB::table('post__tags')->insert([
+                DB::table('post_tag')->insert([
                    'post_id' => $post,
                     'tag_id' => $tag,
                 ]);
@@ -270,31 +294,31 @@ class CommentSeeder extends Seeder
                 'user_id' => 1,
                  'post_id' => 3,
                 'content' => 'I loved to visit France and Italy',
-                  'status' => 'approved',
+                  'status' => 'pending',
             ],
              [
                 'user_id' => 3,
                  'post_id' => 4,
                  'content' => 'I will try these recommendations',
-                 'status' => 'approved',
+                 'status' => 'pending',
             ],
              [
                  'user_id' => 1,
                  'post_id' => 5,
                  'content' => 'Amazing recipes!',
-                 'status' => 'approved',
+                 'status' => 'pending',
             ],
               [
                 'user_id' => 2,
                   'post_id' => 6,
                    'content' => 'I grew up with gaming.',
-                   'status' => 'approved',
+                   'status' => 'pending',
             ],
              [
                  'user_id' => 3,
                  'post_id' => 7,
                  'content' => 'I love reading very much',
-                   'status' => 'approved',
+                   'status' => 'pending',
            ],
             [
                  'user_id' => 1,

@@ -21,6 +21,8 @@
         "vite": "^6.0"
     },
     "dependencies": {
+        "@tinymce/tinymce-react": "^5.1.1",
+        "lucide-react": "^0.469.0",
         "react-id-swiper": "^4.0.0",
         "react-router-dom": "^7.1.1",
         "swiper": "^11.1.15"

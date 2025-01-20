@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TagController;
@@ -24,8 +25,9 @@ Route::middleware('auth')->group(function () {
 // Public routes for blog viewing
 Route::group(['as' => 'blog.'], function () {
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
-    Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('/post/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+    Route::post('/add-post', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/categories/{category:slug}', [CategoryController::class, 'show']);
     Route::get('/tags/{tag:slug}', [TagController::class, 'show'])->name('tags.show');
 });
 
@@ -35,13 +37,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
+Route::get('/dashboard', [CommentController::class, 'index'])->middleware(['auth'])->name('dashboard');
+
 // Author routes
-Route::middleware(['auth', 'role:author'])->group(function () {
+Route::middleware(['auth', 'can:author'])->group(function () {
     Route::resource('posts', PostController::class)->except(['index', 'show']);
 });
 
 // Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
@@ -49,8 +53,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('tags', TagController::class)->except(['show']);
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
-    Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::patch('/admin/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::patch('/users/{user}/role', [DashboardController::class, 'updateUserRole'])->name('users.updateRole');
+    Route::post('/users', [DashboardController::class, 'createUser'])->name('users.create');
 });
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
